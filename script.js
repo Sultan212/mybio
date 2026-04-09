@@ -1,92 +1,45 @@
-let currentUser = localStorage.getItem('currentUser');
-updateUI();
+let score = 0;
+let gameInterval;
 
-function showRegister() {
-    document.getElementById('registerSection').style.display = 'block';
-    document.getElementById('loginSection').style.display = 'none';
-}
-function showLogin() {
-    document.getElementById('registerSection').style.display = 'none';
-    document.getElementById('loginSection').style.display = 'block';
-}
+function startGame() {
+    score = 0;
+    document.getElementById('score').innerText = score;
+    clearInterval(gameInterval);
+    const gameArea = document.getElementById('gameArea');
+    gameArea.innerHTML = '';
 
-function register() {
-    const username = document.getElementById('regUsername').value;
-    const password = document.getElementById('regPassword').value;
-    if(!username || !password) return;
-
-    let users = JSON.parse(localStorage.getItem('users') || '[]');
-    if(users.find(u => u.username === username)){
-        document.getElementById('regMessage').innerText = 'Kullanıcı adı zaten var!';
-        return;
-    }
-    users.push({username, password});
-    localStorage.setItem('users', JSON.stringify(users));
-    document.getElementById('regMessage').innerText = 'Kayıt başarılı! Giriş yapabilirsiniz.';
+    gameInterval = setInterval(() => {
+        createBox();
+    }, 1000);
 }
 
-function login() {
-    const username = document.getElementById('loginUsername').value;
-    const password = document.getElementById('loginPassword').value;
+function createBox() {
+    const gameArea = document.getElementById('gameArea');
+    const box = document.createElement('div');
+    box.className = 'box';
+    box.style.backgroundColor = getRandomColor();
+    box.style.top = Math.random() * (gameArea.offsetHeight - 50) + 'px';
+    box.style.left = Math.random() * (gameArea.offsetWidth - 50) + 'px';
 
-    let users = JSON.parse(localStorage.getItem('users') || '[]');
-    let user = users.find(u => u.username === username && u.password === password);
-    if(user){
-        localStorage.setItem('currentUser', username);
-        currentUser = username;
-        updateUI();
-    } else {
-        document.getElementById('loginMessage').innerText = 'Kullanıcı adı veya şifre hatalı!';
-    }
-}
-
-function logout() {
-    localStorage.removeItem('currentUser');
-    currentUser = null;
-    updateUI();
-}
-
-function updateUI() {
-    if(currentUser){
-        document.getElementById('auth').style.display = 'none';
-        document.getElementById('user').style.display = 'block';
-        document.getElementById('usernameDisplay').innerText = currentUser;
-        document.getElementById('feedSection').style.display = 'block';
-        showPosts();
-    } else {
-        document.getElementById('auth').style.display = 'block';
-        document.getElementById('user').style.display = 'none';
-        document.getElementById('feedSection').style.display = 'none';
-    }
-}
-
-function addPost() {
-    const caption = document.getElementById('postCaption').value;
-    const file = document.getElementById('postImage').files[0];
-    if(!file) return alert('Fotoğraf seçiniz.');
-
-    const reader = new FileReader();
-    reader.onload = function(e){
-        const posts = JSON.parse(localStorage.getItem('posts') || '[]');
-        posts.unshift({username: currentUser, caption, image: e.target.result});
-        localStorage.setItem('posts', JSON.stringify(posts));
-        showPosts();
-        document.getElementById('postCaption').value = '';
-        document.getElementById('postImage').value = '';
-    }
-    reader.readAsDataURL(file);
-}
-
-function showPosts() {
-    const postsDiv = document.getElementById('posts');
-    postsDiv.innerHTML = '';
-    const posts = JSON.parse(localStorage.getItem('posts') || '[]');
-    posts.forEach(post => {
-        const div = document.createElement('div');
-        div.className = 'post';
-        div.innerHTML = `<strong>${post.username}</strong><br>
-                         <img src="${post.image}" alt=""><br>
-                         <p>${post.caption}</p>`;
-        postsDiv.appendChild(div);
+    box.addEventListener('click', () => {
+        score++;
+        document.getElementById('score').innerText = score;
+        box.remove();
     });
+
+    gameArea.appendChild(box);
+
+    // 3 saniye sonra kutu kaybolsın
+    setTimeout(() => {
+        if(box.parentElement) box.remove();
+    }, 3000);
+}
+
+function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for(let i=0;i<6;i++){
+        color += letters[Math.floor(Math.random()*16)];
+    }
+    return color;
 }
