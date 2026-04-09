@@ -1,57 +1,53 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Benim İlk Sitem</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #1e3c72, #2a5298);
-            color: white;
-            text-align: center;
-        }
-        header {
-            padding: 20px;
-            font-size: 24px;
-            font-weight: bold;
-            background: rgba(0,0,0,0.3);
-        }
-        .container {
-            margin-top: 50px;
-        }
-        button {
-            padding: 10px 20px;
-            border: none;
-            background: white;
-            color: black;
-            font-size: 16px;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #ddd;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Insta SPA</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-    🌐 Benim Web Sitem
+    <h1>Mini Instagram</h1>
+    <div id="auth">
+        <button onclick="showLogin()">Giriş Yap</button>
+        <button onclick="showRegister()">Kayıt Ol</button>
+    </div>
+    <div id="user" style="display:none;">
+        Hoşgeldin, <span id="usernameDisplay"></span>
+        <button onclick="logout()">Çıkış Yap</button>
+    </div>
 </header>
 
-<div class="container">
-    <h1>Hoşgeldin!</h1>
-    <p>Bu siteyi ben yaptım 🚀</p>
-    <button onclick="mesaj()">Bana Tıkla</button>
-</div>
+<main>
+    <section id="registerSection" style="display:none;">
+        <h2>Kayıt Ol</h2>
+        <input type="text" id="regUsername" placeholder="Kullanıcı Adı">
+        <input type="password" id="regPassword" placeholder="Şifre">
+        <button onclick="register()">Kayıt Ol</button>
+        <p id="regMessage"></p>
+    </section>
 
-<script>
-    function mesaj() {
-        alert("Tebrikler! JavaScript çalışıyor 😎");
-    }
-</script>
+    <section id="loginSection" style="display:none;">
+        <h2>Giriş Yap</h2>
+        <input type="text" id="loginUsername" placeholder="Kullanıcı Adı">
+        <input type="password" id="loginPassword" placeholder="Şifre">
+        <button onclick="login()">Giriş Yap</button>
+        <p id="loginMessage"></p>
+    </section>
 
+    <section id="feedSection" style="display:none;">
+        <h2>Gönderiler</h2>
+        <div id="newPost">
+            <input type="text" id="postCaption" placeholder="Ne düşünüyorsun?">
+            <input type="file" id="postImage">
+            <button onclick="addPost()">Paylaş</button>
+        </div>
+        <div id="posts"></div>
+    </section>
+</main>
+
+<script src="script.js"></script>
 </body>
 </html>
