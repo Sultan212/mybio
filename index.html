@@ -3,49 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mini Insta SPA</title>
+<title>Mini Oyun</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-    <h1>Mini Instagram</h1>
-    <div id="auth">
-        <button onclick="showLogin()">Giriş Yap</button>
-        <button onclick="showRegister()">Kayıt Ol</button>
-    </div>
-    <div id="user" style="display:none;">
-        Hoşgeldin, <span id="usernameDisplay"></span>
-        <button onclick="logout()">Çıkış Yap</button>
-    </div>
+    <h1>Renkli Kutucuk Yakala!</h1>
+    <p>Puan: <span id="score">0</span></p>
+    <button onclick="startGame()">Oyuna Başla</button>
 </header>
 
 <main>
-    <section id="registerSection" style="display:none;">
-        <h2>Kayıt Ol</h2>
-        <input type="text" id="regUsername" placeholder="Kullanıcı Adı">
-        <input type="password" id="regPassword" placeholder="Şifre">
-        <button onclick="register()">Kayıt Ol</button>
-        <p id="regMessage"></p>
-    </section>
-
-    <section id="loginSection" style="display:none;">
-        <h2>Giriş Yap</h2>
-        <input type="text" id="loginUsername" placeholder="Kullanıcı Adı">
-        <input type="password" id="loginPassword" placeholder="Şifre">
-        <button onclick="login()">Giriş Yap</button>
-        <p id="loginMessage"></p>
-    </section>
-
-    <section id="feedSection" style="display:none;">
-        <h2>Gönderiler</h2>
-        <div id="newPost">
-            <input type="text" id="postCaption" placeholder="Ne düşünüyorsun?">
-            <input type="file" id="postImage">
-            <button onclick="addPost()">Paylaş</button>
-        </div>
-        <div id="posts"></div>
-    </section>
+    <div id="gameArea"></div>
 </main>
 
 <script src="script.js"></script>
