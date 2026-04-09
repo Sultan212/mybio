@@ -1,0 +1,29 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #fafafa;
+    margin: 0;
+    padding: 0;
+}
+header {
+    background: #fff;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+button {
+    margin: 5px;
+    padding: 5px 10px;
+}
+#posts {
+    max-width: 500px;
+    margin: 20px auto;
+}
+.post {
+    background: #fff;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+}
+.post img {
+    max-width: 100%;
+}
