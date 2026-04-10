@@ -1,23 +1,758 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mini Oyun</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Google Custom Search | Mobil Uyumlu Arama Motoru</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #f5f7fc 0%, #eef2f8 100%);
+            min-height: 100vh;
+            padding: 1rem;
+            color: #1e2a3e;
+        }
+
+        /* ana konteyner */
+        .app-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.02);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        /* başlık ve araçlar */
+        .header {
+            padding: 1.5rem 1.5rem 0.8rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        h1 {
+            font-size: 1.65rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #1e3c72, #2b4f8c);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        h1 span {
+            font-size: 1.7rem;
+        }
+        .settings-btn {
+            background: #ffffffdd;
+            backdrop-filter: blur(4px);
+            border: 1px solid #cfdfed;
+            padding: 0.5rem 1rem;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2c5a8c;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .settings-btn:hover, .settings-btn:active {
+            background: white;
+            border-color: #8bb9e0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transform: scale(0.97);
+        }
+
+        /* settings kartı */
+        .settings-card {
+            margin: 1rem 1.5rem;
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.3rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e9edf2;
+            transition: all 0.2s;
+        }
+        .settings-group {
+            margin-bottom: 1.2rem;
+        }
+        .settings-group label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 0.4rem;
+            color: #2c3e50;
+        }
+        .settings-group input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 1rem;
+            border: 1.5px solid #e2e8f0;
+            font-size: 0.9rem;
+            background: #fefefe;
+            transition: 0.2s;
+        }
+        .settings-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+        .save-settings {
+            background: #1f6392;
+            color: white;
+            border: none;
+            padding: 0.7rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: 0.2s;
+        }
+        .save-settings:active {
+            background: #0e4a6e;
+            transform: scale(0.98);
+        }
+        .reset-creds {
+            background: transparent;
+            border: 1px solid #cbd5e1;
+            margin-top: 0.7rem;
+            color: #5b6e8c;
+        }
+        .status-badge {
+            font-size: 0.75rem;
+            margin-top: 0.7rem;
+            text-align: center;
+            padding: 0.4rem;
+            border-radius: 2rem;
+            background: #f1f5f9;
+        }
+
+        /* arama alanı */
+        .search-area {
+            padding: 1.5rem 1.5rem 1rem 1.5rem;
+        }
+        .search-box {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .input-wrapper {
+            display: flex;
+            background: white;
+            border-radius: 3rem;
+            border: 1px solid #e2edf7;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            transition: all 0.2s;
+        }
+        .input-wrapper:focus-within {
+            border-color: #3b82f6;
+            box-shadow: 0 4px 14px rgba(59,130,246,0.15);
+        }
+        .search-input {
+            flex: 1;
+            padding: 0.9rem 1.2rem;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            border-radius: 3rem;
+            outline: none;
+        }
+        .search-btn {
+            background: #1f6392;
+            border: none;
+            border-radius: 3rem;
+            padding: 0 1.5rem;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+        .search-btn:active {
+            background: #0f4b6e;
+            transform: scale(0.96);
+        }
+
+        /* sonuçlar */
+        .results-container {
+            padding: 0.2rem 1.5rem 1.5rem 1.5rem;
+        }
+        .result-stats {
+            font-size: 0.8rem;
+            color: #4a627a;
+            padding: 0.5rem 0 1rem 0;
+            border-bottom: 1px dashed #dce5ef;
+            margin-bottom: 1rem;
+        }
+        .result-card {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            border: 1px solid #eef3fc;
+            transition: all 0.2s;
+        }
+        .result-card:hover {
+            border-color: #cbddee;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+        }
+        .result-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+        }
+        .result-title a {
+            text-decoration: none;
+            color: #1e4a76;
+        }
+        .result-title a:active {
+            color: #0f3b5c;
+        }
+        .result-link {
+            font-size: 0.75rem;
+            color: #2b825b;
+            word-break: break-all;
+            margin-bottom: 0.5rem;
+        }
+        .result-snippet {
+            font-size: 0.85rem;
+            color: #3a546d;
+            line-height: 1.4;
+        }
+        .result-thumb {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+        .thumb-img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 12px;
+            background: #f1f5f9;
+            margin-top: 6px;
+        }
+        .no-image {
+            width: 70px;
+            height: 70px;
+            background: #eef2f8;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8ba0bc;
+            font-size: 1.8rem;
+        }
+        .loading {
+            text-align: center;
+            padding: 2.5rem;
+            color: #2c6280;
+            font-weight: 500;
+        }
+        .error-message {
+            background: #fee2e2;
+            color: #b91c1c;
+            border-radius: 1.2rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #6c86a3;
+        }
+
+        /* pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem 0 1.8rem 0;
+            margin-top: 0.5rem;
+        }
+        .page-btn {
+            background: white;
+            border: 1px solid #cbdde9;
+            padding: 0.6rem 1.3rem;
+            border-radius: 3rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.1s;
+            font-size: 0.9rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .page-btn:active {
+            background: #eef3fc;
+            transform: scale(0.96);
+        }
+        .page-btn.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* footer */
+        .footer-note {
+            text-align: center;
+            font-size: 0.7rem;
+            padding: 0.8rem;
+            color: #8196af;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* mobil iyileştirmeler */
+        @media (max-width: 550px) {
+            body {
+                padding: 0.6rem;
+            }
+            .header {
+                padding: 1.2rem 1.2rem 0.6rem 1.2rem;
+            }
+            .search-area {
+                padding: 1rem 1.2rem 0.5rem 1.2rem;
+            }
+            .results-container {
+                padding: 0.2rem 1.2rem 1.2rem 1.2rem;
+            }
+            .search-btn {
+                padding: 0 1.2rem;
+            }
+            .result-title {
+                font-size: 1rem;
+            }
+            .settings-card {
+                margin: 0.8rem 1.2rem;
+            }
+        }
+        button {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-    <h1>Renkli Kutucuk Yakala!</h1>
-    <p>Puan: <span id="score">0</span></p>
-    <button onclick="startGame()">Oyuna Başla</button>
-</header>
+<div class="app-container">
+    <div class="header">
+        <h1>
+            <span>🔍</span> Web Keşfi
+        </h1>
+        <button class="settings-btn" id="toggleSettingsBtn">
+            ⚙️ Ayarlar
+        </button>
+    </div>
 
-<main>
-    <div id="gameArea"></div>
-</main>
+    <!-- API ve CX ayar kartı -->
+    <div id="settingsPanel" class="settings-card" style="display: none;">
+        <div class="settings-group">
+            <label>🔑 Google API Key (JSON API)</label>
+            <input type="text" id="apiKeyInput" placeholder="AIzaSy... örn: Google Cloud API Anahtarı" autocomplete="off">
+        </div>
+        <div class="settings-group">
+            <label>🧩 Search Engine ID (cx)</label>
+            <input type="text" id="cxInput" placeholder="Örn: 1234567890abcdefg" autocomplete="off">
+        </div>
+        <button class="save-settings" id="saveSettingsBtn">✅ Kaydet ve Kullan</button>
+        <button class="save-settings reset-creds" id="resetSettingsBtn">🗑️ Temizle & Sıfırla</button>
+        <div class="status-badge" id="apiStatusMsg">
+            ⚠️ API ve CX bilgisi gerekli
+        </div>
+    </div>
 
-<script src="script.js"></script>
+    <!-- arama kutusu -->
+    <div class="search-area">
+        <div class="search-box">
+            <div class="input-wrapper">
+                <input type="text" id="searchQueryInput" class="search-input" placeholder="Aramak istediğiniz kelime... (örnek: yapay zeka)" autocomplete="off">
+                <button id="searchButton" class="search-btn">
+                    🔎 Ara
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- sonuçların gösterileceği alan -->
+    <div class="results-container" id="resultsContainer">
+        <div id="statsArea" class="result-stats"></div>
+        <div id="resultsList"></div>
+        <div id="paginationArea" class="pagination"></div>
+    </div>
+    <div class="footer-note">
+        ⚡ Google Custom Search API ile güçlendirilmiştir | Ayarlardan API Key + CX ekleyin
+    </div>
+</div>
+
+<script>
+    // ---------- STATE ----------
+    let config = {
+        apiKey: '',
+        cx: ''
+    };
+    let currentQuery = '';
+    let currentStartIndex = 1;     // geçerli sayfa başlangıç indeksi (1, 11, 21...)
+    let totalResultsCount = 0;
+    let nextPageStart = null;
+    let prevPageStart = null;
+
+    // DOM Elements
+    const toggleBtn = document.getElementById('toggleSettingsBtn');
+    const settingsPanel = document.getElementById('settingsPanel');
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    const cxInput = document.getElementById('cxInput');
+    const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+    const resetSettingsBtn = document.getElementById('resetSettingsBtn');
+    const searchInput = document.getElementById('searchQueryInput');
+    const searchBtn = document.getElementById('searchButton');
+    const resultsListDiv = document.getElementById('resultsList');
+    const statsArea = document.getElementById('statsArea');
+    const paginationArea = document.getElementById('paginationArea');
+    const apiStatusMsg = document.getElementById('apiStatusMsg');
+
+    // ---------- YARDIMCI FONKSİYONLAR ----------
+    function loadConfigFromStorage() {
+        const storedApi = localStorage.getItem('google_api_key');
+        const storedCx = localStorage.getItem('google_cx');
+        if (storedApi) config.apiKey = storedApi;
+        if (storedCx) config.cx = storedCx;
+        // input alanlarını doldur
+        apiKeyInput.value = config.apiKey || '';
+        cxInput.value = config.cx || '';
+        updateStatusMessage();
+    }
+
+    function saveConfigToStorage() {
+        localStorage.setItem('google_api_key', config.apiKey);
+        localStorage.setItem('google_cx', config.cx);
+        updateStatusMessage();
+    }
+
+    function updateStatusMessage() {
+        if (config.apiKey && config.cx) {
+            apiStatusMsg.innerHTML = '✅ API ve CX yapılandırıldı. Arama yapabilirsiniz.';
+            apiStatusMsg.style.background = '#e6f7ec';
+            apiStatusMsg.style.color = '#166534';
+        } else if (!config.apiKey && !config.cx) {
+            apiStatusMsg.innerHTML = '⚠️ Lütfen Google API Key ve CX bilgilerinizi girin. (Custom Search JSON API)';
+            apiStatusMsg.style.background = '#fff3e0';
+            apiStatusMsg.style.color = '#9b4a00';
+        } else if (!config.apiKey) {
+            apiStatusMsg.innerHTML = '⚠️ API Key eksik. Google Cloud Console\'dan alın.';
+            apiStatusMsg.style.background = '#ffe6e6';
+            apiStatusMsg.style.color = '#b91c1c';
+        } else if (!config.cx) {
+            apiStatusMsg.innerHTML = '⚠️ Search Engine ID (cx) eksik. Programmable Search Engine\'den alın.';
+            apiStatusMsg.style.background = '#ffe6e6';
+            apiStatusMsg.style.color = '#b91c1c';
+        }
+    }
+
+    function clearResultsUI() {
+        resultsListDiv.innerHTML = '';
+        statsArea.innerHTML = '';
+        paginationArea.innerHTML = '';
+    }
+
+    function showLoading() {
+        resultsListDiv.innerHTML = '<div class="loading"><span>🔎</span> Google\'da aranıyor...</div>';
+        statsArea.innerHTML = '';
+        paginationArea.innerHTML = '';
+    }
+
+    function showError(message) {
+        resultsListDiv.innerHTML = `<div class="error-message">⚠️ Hata: ${message}</div>`;
+        statsArea.innerHTML = '';
+        paginationArea.innerHTML = '';
+    }
+
+    function renderResults(items, totalResults, searchTerm) {
+        if (!items || items.length === 0) {
+            resultsListDiv.innerHTML = `<div class="empty-state">😕 "${searchTerm}" için sonuç bulunamadı. Farklı anahtar kelimeler deneyin.</div>`;
+            statsArea.innerHTML = `📭 ${totalResults || 0} sonuç bulundu.`;
+            return;
+        }
+
+        // istatistik
+        const resultCountText = totalResults ? `${totalResults.toLocaleString()} sonuçtan ilk ${items.length} tanesi` : `Toplam ${items.length} sonuç`;
+        statsArea.innerHTML = `🔍 "${searchTerm}" için ${resultCountText} gösteriliyor.`;
+
+        let html = '';
+        for (const item of items) {
+            const title = item.title || 'Başlık yok';
+            const link = item.link || '#';
+            const snippet = item.snippet || 'Açıklama mevcut değil.';
+            // resim thumbnail (pagemap cse_image)
+            let thumbUrl = null;
+            if (item.pagemap && item.pagemap.cse_image && item.pagemap.cse_image.length > 0) {
+                thumbUrl = item.pagemap.cse_image[0].src;
+            } else if (item.pagemap && item.pagemap.cse_thumbnail && item.pagemap.cse_thumbnail.length > 0) {
+                thumbUrl = item.pagemap.cse_thumbnail[0].src;
+            }
+            const hasImage = thumbUrl && thumbUrl.startsWith('http');
+            html += `
+                <div class="result-card">
+                    <div class="result-thumb">
+                        <div style="flex:1;">
+                            <div class="result-title">
+                                <a href="${link}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>
+                            </div>
+                            <div class="result-link">${escapeHtml(link)}</div>
+                            <div class="result-snippet">${escapeHtml(snippet)}</div>
+                        </div>
+                        ${hasImage ? `<img class="thumb-img" src="${thumbUrl}" alt="thumb" loading="lazy" onerror="this.style.display='none'">` : `<div class="no-image">📄</div>`}
+                    </div>
+                </div>
+            `;
+        }
+        resultsListDiv.innerHTML = html;
+    }
+
+    // basit XSS koruması
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    // pagination butonlarını güncelle (response'dan alınan next/prev start indekslerine göre)
+    function updatePaginationControls(responseQueries, currentQueryString) {
+        paginationArea.innerHTML = '';
+        if (!responseQueries) return;
+
+        const next = responseQueries.nextPage ? responseQueries.nextPage[0] : null;
+        const prev = responseQueries.previousPage ? responseQueries.previousPage[0] : null;
+        const hasNext = next && next.startIndex;
+        const hasPrev = prev && prev.startIndex;
+
+        if (!hasNext && !hasPrev) return;
+
+        const btnContainer = document.createElement('div');
+        btnContainer.style.display = 'flex';
+        btnContainer.style.gap = '1rem';
+        btnContainer.style.justifyContent = 'center';
+        
+        if (hasPrev) {
+            const prevBtn = document.createElement('button');
+            prevBtn.textContent = '◀ Önceki Sayfa';
+            prevBtn.className = 'page-btn';
+            prevBtn.addEventListener('click', () => {
+                if (prev.startIndex) {
+                    performSearchWithStart(currentQueryString, prev.startIndex);
+                }
+            });
+            btnContainer.appendChild(prevBtn);
+        } else {
+            const disabledPrev = document.createElement('button');
+            disabledPrev.textContent = '◀ Önceki';
+            disabledPrev.className = 'page-btn disabled';
+            disabledPrev.disabled = true;
+            btnContainer.appendChild(disabledPrev);
+        }
+
+        if (hasNext) {
+            const nextBtn = document.createElement('button');
+            nextBtn.textContent = 'Sonraki Sayfa ▶';
+            nextBtn.className = 'page-btn';
+            nextBtn.addEventListener('click', () => {
+                if (next.startIndex) {
+                    performSearchWithStart(currentQueryString, next.startIndex);
+                }
+            });
+            btnContainer.appendChild(nextBtn);
+        } else {
+            const disabledNext = document.createElement('button');
+            disabledNext.textContent = 'Sonraki ▶';
+            disabledNext.className = 'page-btn disabled';
+            disabledNext.disabled = true;
+            btnContainer.appendChild(disabledNext);
+        }
+        paginationArea.appendChild(btnContainer);
+    }
+
+    // ana arama motoru: start index ile istek atar
+    async function performSearchWithStart(query, startIndex) {
+        if (!query || query.trim() === '') {
+            showError('Lütfen bir arama terimi girin.');
+            return;
+        }
+        if (!config.apiKey || !config.cx) {
+            showError('Google API Key ve CX ayarlarını kaydedin. Ayarlar panelini açıp bilgilerinizi girin.');
+            return;
+        }
+
+        currentQuery = query.trim();
+        currentStartIndex = startIndex;
+        showLoading();
+
+        const url = `https://www.googleapis.com/customsearch/v1?key=${encodeURIComponent(config.apiKey)}&cx=${encodeURIComponent(config.cx)}&q=${encodeURIComponent(currentQuery)}&start=${startIndex}&num=10`;
+
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
+            const response = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            
+            if (!response.ok) {
+                let errorDetail = `HTTP ${response.status}`;
+                try {
+                    const errData = await response.json();
+                    if (errData.error && errData.error.message) errorDetail = errData.error.message;
+                } catch(e) {}
+                throw new Error(`API Hatası: ${errorDetail}`);
+            }
+            const data = await response.json();
+            
+            // Hata mesajı kontrolü (API bazen error objesi döner)
+            if (data.error) {
+                throw new Error(data.error.message || 'Google API hatası, anahtar veya cx geçersiz olabilir.');
+            }
+            
+            const items = data.items || [];
+            const totalResults = data.searchInformation ? data.searchInformation.totalResults : '0';
+            totalResultsCount = parseInt(totalResults) || 0;
+            
+            renderResults(items, totalResultsCount, currentQuery);
+            // pagination verisi varsa butonları oluştur
+            if (data.queries) {
+                updatePaginationControls(data.queries, currentQuery);
+            } else {
+                paginationArea.innerHTML = '';
+            }
+            
+            // sonuç yoksa mesaj
+            if (items.length === 0) {
+                resultsListDiv.innerHTML = `<div class="empty-state">🔎 "${currentQuery}" için hiç sonuç bulunamadı. Farklı kelimeler deneyin.</div>`;
+            }
+        } catch (err) {
+            console.error(err);
+            let mesaj = err.message;
+            if (mesaj.includes('API key')) mesaj = 'API Anahtarı geçersiz veya yetkisiz. Lütfen kontrol edin.';
+            else if (mesaj.includes('cx')) mesaj = 'Search Engine ID (cx) geçersiz.';
+            else if (mesaj.includes('quota')) mesaj = 'Kota aşımı veya günlük limit.';
+            showError(mesaj);
+            paginationArea.innerHTML = '';
+        }
+    }
+
+    // yeni arama (sayfa başına sıfırlama)
+    async function performNewSearch() {
+        const rawQuery = searchInput.value.trim();
+        if (!rawQuery) {
+            showError('Arama kutusu boş olamaz.');
+            return;
+        }
+        if (!config.apiKey || !config.cx) {
+            showError('Önce ayarlardan API Key ve CX bilgilerinizi kaydedin.');
+            return;
+        }
+        // reset pagination start index
+        await performSearchWithStart(rawQuery, 1);
+    }
+
+    // settings logic
+    function openSettingsPanel() {
+        settingsPanel.style.display = 'block';
+    }
+    function closeSettingsPanel() {
+        settingsPanel.style.display = 'none';
+    }
+    function toggleSettings() {
+        if (settingsPanel.style.display === 'none' || getComputedStyle(settingsPanel).display === 'none') {
+            openSettingsPanel();
+        } else {
+            closeSettingsPanel();
+        }
+    }
+    function saveSettings() {
+        const newApiKey = apiKeyInput.value.trim();
+        const newCx = cxInput.value.trim();
+        if (!newApiKey || !newCx) {
+            alert('Lütfen hem API Key hem de CX değerini doldurun.');
+            return;
+        }
+        config.apiKey = newApiKey;
+        config.cx = newCx;
+        saveConfigToStorage();
+        updateStatusMessage();
+        closeSettingsPanel();
+        // ayar değişince önceki sonuçları temizle
+        clearResultsUI();
+        currentQuery = '';
+        resultsListDiv.innerHTML = '<div class="empty-state">✨ API ayarları güncellendi. Yeni bir arama yapın.</div>';
+        statsArea.innerHTML = '';
+        paginationArea.innerHTML = '';
+    }
+    function resetCredentials() {
+        config.apiKey = '';
+        config.cx = '';
+        localStorage.removeItem('google_api_key');
+        localStorage.removeItem('google_cx');
+        apiKeyInput.value = '';
+        cxInput.value = '';
+        updateStatusMessage();
+        closeSettingsPanel();
+        clearResultsUI();
+        resultsListDiv.innerHTML = '<div class="empty-state">🔐 Kimlik bilgileri temizlendi. Ayarlardan ekleyerek arama yapabilirsiniz.</div>';
+        statsArea.innerHTML = '';
+        currentQuery = '';
+    }
+
+    // event listeners
+    function initEventListeners() {
+        toggleBtn.addEventListener('click', toggleSettings);
+        saveSettingsBtn.addEventListener('click', saveSettings);
+        resetSettingsBtn.addEventListener('click', resetCredentials);
+        searchBtn.addEventListener('click', performNewSearch);
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performNewSearch();
+        });
+        // dışarı tıklama ile settings kapatma opsiyonel (basit)
+        document.addEventListener('click', (e) => {
+            if (settingsPanel.style.display === 'block' && !settingsPanel.contains(e.target) && !toggleBtn.contains(e.target)) {
+                closeSettingsPanel();
+            }
+        });
+    }
+
+    // ilk yükleme
+    function init() {
+        loadConfigFromStorage();
+        initEventListeners();
+        // hoş geldiniz mesajı
+        if (config.apiKey && config.cx) {
+            resultsListDiv.innerHTML = '<div class="empty-state">🔎 Hazır! Arama kutusuna bir kelime yazın.</div>';
+        } else {
+            resultsListDiv.innerHTML = '<div class="empty-state">⚙️ Başlamak için sağ üstteki "Ayarlar" butonuna tıklayarak Google API Key ve CX bilgilerinizi girin.</div>';
+        }
+    }
+    init();
+</script>
 </body>
 </html>
