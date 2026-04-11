@@ -6,11 +6,17 @@ fetch('data.json')
     data = json;
   });
 
-function search() {
-  const query = document.getElementById("searchInput").value.toLowerCase();
-  const resultsDiv = document.getElementById("results");
+const input = document.getElementById("searchInput");
+const resultsDiv = document.getElementById("results");
 
+// Yazarken otomatik arama
+input.addEventListener("input", search);
+
+function search() {
+  const query = input.value.toLowerCase();
   resultsDiv.innerHTML = "";
+
+  if (query === "") return;
 
   const results = data.filter(item =>
     item.title.toLowerCase().includes(query) ||
@@ -18,14 +24,16 @@ function search() {
   );
 
   if (results.length === 0) {
-    resultsDiv.innerHTML = "Sonuç bulunamadı.";
+    resultsDiv.innerHTML = "<p>Sonuç bulunamadı.</p>";
     return;
   }
 
   results.forEach(item => {
     resultsDiv.innerHTML += `
       <div class="result">
-        <a href="${item.url}" target="_blank"><h3>${item.title}</h3></a>
+        <a href="${item.url}" target="_blank">
+          <h3>${item.title}</h3>
+        </a>
         <p>${item.description}</p>
       </div>
     `;
