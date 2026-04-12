@@ -2,24 +2,36 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  
-  <!-- MOBİL UYUMLULUK -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Mini Arama Motoru</title>
+  <title>Webgözleg</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
-  <h1>Arama Motoru</h1>
 
+  <!-- LOGO -->
+  <h1 class="logo">
+    <span class="web">Web</span><span class="gozleg">gözleg</span>
+  </h1>
+
+  <!-- ARAMA -->
   <div class="search-box">
     <input type="text" id="searchInput" placeholder="Bir şey ara...">
     <button onclick="search()">Ara</button>
   </div>
 
+  <!-- KATEGORİLER -->
+  <div class="categories">
+    <div>📄 Makale</div>
+    <div>🎥 Videolar</div>
+    <div>💻 Kodlar</div>
+    <div>🔗 Linkler</div>
+  </div>
+
+  <!-- SONUÇ -->
   <div id="results"></div>
+
 </div>
 
 <script src="script.js"></script>
