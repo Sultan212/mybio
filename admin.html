@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>Admin Panel</h1>
+
+  <input type="text" id="title" placeholder="Başlık">
+  <input type="text" id="url" placeholder="URL">
+  <input type="text" id="desc" placeholder="Açıklama">
+
+  <button onclick="addData()">Ekle</button>
+  <button onclick="downloadJSON()">JSON İndir</button>
+
+  <div id="list"></div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>
