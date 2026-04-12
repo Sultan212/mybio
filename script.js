@@ -9,7 +9,6 @@ fetch('data.json')
 const input = document.getElementById("searchInput");
 const resultsDiv = document.getElementById("results");
 
-// Yazarken otomatik arama
 input.addEventListener("input", search);
 
 function search() {
